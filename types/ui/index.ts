@@ -1,4 +1,6 @@
 export enum UITypes {
-  openSidebar = 'SIDEBAR - OPEN',
-  closeSidebar = 'SIDEBAR - CLOSE'
+  openSidebar = 'UI - OPEN Sidebar',
+  closeSidebar = 'UI - CLOSE sidebar',
+  toggleIsAddingEntry = 'UI - toggle IsAddingEntry',
+  toggleIsDragging = 'UI - toggle isDragging'
 }

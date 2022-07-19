@@ -3,14 +3,14 @@ import { UITypes } from "../../types/ui"
 
 type UIActionType = 
   | { type: UITypes.openSidebar}  
-  | { type: UITypes.closeSidebar};
+  | { type: UITypes.closeSidebar}
+  | { type: UITypes.toggleIsAddingEntry, payload: boolean}
+  | { type: UITypes.toggleIsDragging, payload: boolean};
 
 export const uiReducer = ( state: UIState, action: UIActionType ): UIState => {
   
   switch (action.type) {
     case UITypes.openSidebar:
-
-    console.log("Deberias entrar?")
     
       return {
         ...state,
@@ -22,6 +22,18 @@ export const uiReducer = ( state: UIState, action: UIActionType ): UIState => {
         ...state,
         sidemenuOpen: false
     }      
+
+    case UITypes.toggleIsAddingEntry:
+      return {
+        ...state,
+        isAddingEntry: action.payload
+      }
+
+    case UITypes.toggleIsDragging: 
+      return {
+        ...state,
+        isDragging: action.payload
+      }
   
     default:
       return state;

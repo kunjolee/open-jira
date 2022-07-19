@@ -18,7 +18,8 @@ export const darkTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          backgroundColor: '#4a148c'
+          // backgroundColor: '#4a148c'
+          backgroundColor: '#E7006D'
         }
       }
     }
