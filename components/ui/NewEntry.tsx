@@ -64,7 +64,7 @@ const NewEntry = () => {
                 variant='outlined'
                 color='secondary'
                 endIcon={ <SaveOutlinedIcon /> }
-                onClick={() => onSave()} 
+                onClick={ onSave } 
               >
                 Save
               </Button>

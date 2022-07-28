@@ -30,10 +30,11 @@ const EntryList = ({ status }: Props) => {
     const id = event.dataTransfer.getData('text');    
 
     const entry = entries.find(entry => entry._id === id)!;
-    
-    entry.status = status;
-
+        
     if (entry) {      
+
+      entry.status = status;
+      
       updateEntry( entry );
       toggleDragging(false);
     }
