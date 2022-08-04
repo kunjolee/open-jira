@@ -32,3 +32,6 @@ call:
 ```
   http://localhost:3000/api/seed
 ```
+
+![desk1](./public/desk1.jpeg)
+![desk2](./public/desk2.jpeg)
