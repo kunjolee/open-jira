@@ -1,4 +1,8 @@
+import { useRouter } from 'next/router';
 import { useEffect, useReducer } from 'react';
+
+import { useSnackbar } from 'notistack';
+
 
 import { entriesApi } from '../../apis';
 
@@ -18,7 +22,9 @@ const ENTRIES_INITIAL_STATE: EntriesState = {
 export const EntriesProvider = ({ children }: ChildrenProp) => {
 
   const [state, dispatch] = useReducer( entriesReducer, ENTRIES_INITIAL_STATE );
-  
+  const { enqueueSnackbar } = useSnackbar();
+  const router = useRouter();
+
   const addNewEntry = async ( description: string) => {
 
     const { data } = await entriesApi.post<Entry>('/entries', { description });
@@ -26,22 +32,60 @@ export const EntriesProvider = ({ children }: ChildrenProp) => {
     
   }
 
-  const updateEntry = async ( { _id, description, status }: Entry ) => {
+  const updateEntry = async ( { _id, description, status }: Entry, showSnackbar = false ) => {
     try {
 
     const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, { description, status });
       dispatch({ type: EntriesTypes.updatedEntry, payload: data });
-            
+      
+      if (showSnackbar) {
+        enqueueSnackbar( 'Entry updated successfully' , {
+          variant: 'success',
+          autoHideDuration: 1500,
+          anchorOrigin: {
+          vertical: 'top',
+          horizontal: 'right'
+          }
+        });
+
+        router.push('/');
+      }
+
     } catch (error) {
       console.log({ error })
     }
 
   }
   
+  const deleteEntry = async ( _id: string ) => {
+
+    try {
+      const { data } = await entriesApi.delete<Entry>(`/entries/${_id}`);            
+
+      dispatch({ type: EntriesTypes.deleteEntry, payload: data });
+
+      enqueueSnackbar( 'Entry deleted successfully' , {
+      variant: 'error',
+      autoHideDuration: 1500,
+      anchorOrigin: {
+        vertical: 'top',
+        horizontal: 'right'
+      }
+      });
+
+      router.push('/');
+
+    } catch (err) {
+      console.log(err);
+    }
+      
+  }
+  
   const refreshEntries = async () => {
     const { data } = await entriesApi.get<Entry[]>('/entries')        
     dispatch({ type: EntriesTypes.refreshData, payload: data })
   }
+
 
   useEffect(() => {
     refreshEntries();
@@ -52,7 +96,8 @@ export const EntriesProvider = ({ children }: ChildrenProp) => {
       ...state,
       // 
       addNewEntry,
-      updateEntry
+      updateEntry,
+      deleteEntry
     }}>
       { children }
     </EntriesContext.Provider>

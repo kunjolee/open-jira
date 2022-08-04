@@ -18,6 +18,13 @@ mongodb://localhost:27017/entriesdb
 
 Rename **.env.template.** file to _.env._
 
+## Re build node modules
+
+```
+yarn install
+yarn dev
+```
+
 ## Populate the database with test information
 
 call:

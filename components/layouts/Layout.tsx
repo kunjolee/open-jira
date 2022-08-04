@@ -11,8 +11,6 @@ interface Props {
 
 const Layout = ({ title, children }: Props) => {
 
-  const [handleMenu, setHandleMenu] = useState(false);
-
   return (
     <Box>
       <Head>
@@ -22,7 +20,7 @@ const Layout = ({ title, children }: Props) => {
       <Navbar />
       <Sidebar />
 
-      <Box sx={{ padding: '10px 20px' }}    >
+      <Box sx={{ padding: '10px 20px' }}>
         { children }
       </Box>
     </Box>

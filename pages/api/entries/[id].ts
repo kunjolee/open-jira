@@ -21,7 +21,10 @@ export default function handler ( req: NextApiRequest, res: NextApiResponse<Data
     
     case 'GET': 
       return getEntryById( req, res );
-      
+   
+    case 'DELETE': 
+      return deleteEntry( req, res );
+
     default:
       return res.status(400).json({ message: 'invalid method' });
   }
@@ -53,31 +56,56 @@ const updateEntry = async ( req: NextApiRequest, res: NextApiResponse<Data> ) =>
 
   const entryToUpdate = await Entry.findById( id );
   
-    if ( !entryToUpdate ) {
-      await db.disconnect();
-      return res.status(400).json({ message: 'there is no entry with that ID: ' + id});
-    }
-    
-    const {
-      description = entryToUpdate.description,
-      status = entryToUpdate.status
-    } = req.body;
+  if ( !entryToUpdate ) {
+    await db.disconnect();
+    return res.status(400).json({ message: 'there is no entry with that ID: ' + id});
+  }
   
-    let options = {
-      runValidators: true,
-      new: true
-    }
+  const {
+    description = entryToUpdate.description,
+    status = entryToUpdate.status
+  } = req.body;
 
-    try {
-      const updatedEntry = await Entry.findByIdAndUpdate( id, { description, status }, options );          
-      await db.disconnect();
-      res.status(200).json(updatedEntry!);
-      
-    } catch (error: any) {
-      await db.disconnect();
-      
-      res.status(400).json({ message: JSON.stringify(error.errors.status.message) })
-    }    
+  let options = {
+    runValidators: true,
+    new: true
+  }
+
+  try {
+    const updatedEntry = await Entry.findByIdAndUpdate( id, { description, status }, options );          
+    await db.disconnect();
+    res.status(200).json(updatedEntry!);
+    
+  } catch (error: any) {
+    await db.disconnect();
+    
+    res.status(400).json({ message: JSON.stringify(error.errors.status.message) })
+  }        
+
+}
+
+const deleteEntry = async (req: NextApiRequest , res: NextApiResponse<Data> ) => {
+  const { id } = req.query;    
+
+  await db.connect();
+
+  const entryToDelete = await Entry.findById( id );
+
+  if ( !entryToDelete ) {
+    await db.disconnect();
+    return res.status(400).json({ message: 'there is no entry with that ID: ' + id });
+  }
   
+  try {
+    const deletedEntry = await Entry.findByIdAndDelete(id, { new: true });
+        
+    await db.disconnect();
+    res.status(200).json( deletedEntry! );
+    
+  } catch (err) {
+
+    await db.disconnect();
+    console.log('Something went wrong while deleting entry',err)
+  }
 }
 
