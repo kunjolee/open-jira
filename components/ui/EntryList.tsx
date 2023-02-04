@@ -35,7 +35,7 @@ const EntryList = ({ status }: Props) => {
 
       entry.status = status;
       
-      updateEntry( entry );
+      updateEntry( entry, false );
       toggleDragging(false);
     }
   }
